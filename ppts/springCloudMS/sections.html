@@ -154,14 +154,54 @@
 
 <section>
     <section>
-        <h2>Circuit Breaker</h2>
-        错误熔断
+        <h2>Circuit Breaker:Hystrix</h2>
+        <ul>
+            <li>错误熔断</li>
+        </ul>
     </section>
+    <section>
+        <h2>解决的问题：</h2>
+        <ul>
+            <li>某个服务A依赖30个服务,30个服务的可用性是99.99%</li>
+            <li>服务A的可用性是99.99%的30次方： 99.7%</li>
+            <li>0.3% of 1000 requests = 3 failures</li>
+        </ul>
+    </section>
+    <section>
+        <h2>fallback:降级</h2>
+        <ul>
+            <li>客户端优雅降级,切断级联</li>
+        </ul>
+    </section>
+
     <section>
         <img src="ppts/serviceMesh/hystrix-command-flow.png">
     </section>
     <section>
-        具体细节待补充
+        <h2>Threads & Thread Pools:独立线程</h2>
+        <ul>
+            <li>Clients execute on separate threads.</li>
+        </ul>
+    </section>
+    <section>
+        <img src="ppts/springCloudMS/thread.png">
+    </section>
+
+    <section>
+        <h2>Request collapse:请求折叠</h2>
+        <ul>
+            <li>multiple requests into a single back-end dependency call</li>
+            <li>Use request collapsing to reduce the number of threads and network connections needed to perform concurrent</li>
+        </ul>
+    </section>
+    <section>
+        <img src="ppts/springCloudMS/window.png">
+    </section>
+    <section>
+        <h2>Request Caching:请求缓存</h2>
+    </section>
+    <section>
+        <img src="ppts/springCloudMS/cache.png">
     </section>
 </section>
 
@@ -171,17 +211,113 @@
         客户端负载均衡
     </section>
     <section>
-        具体细节待补充
+        <h2>Ribbon provides the following features</h2>
+        <ul>
+            <li>Multiple and pluggable load balancing rules</li>
+            <li>Integration with service discovery</li>
+            <li>Built-in failure resiliency</li>
+            <li>Clients integrated with load balancers</li>
+        </ul>
     </section>
+    <section>
+        <h2>可插拔的负载均衡实现</h2>
+        <ul>
+            <li>round robin</li>
+            <li>response time weighted</li>
+            <li>random load balancing</li>
+        </ul>
+    </section>
+    <section>
+        <h2>集成服务发现</h2>
+        <ul>
+            <li>根据服务发现服务动态更新服务列表</li>
+        </ul>
+    </section>
+    <section>
+        <h2>弹性容错</h2>
+        <ul>
+            <li>通过IPing接口动态检测存活服务</li>
+            <li>自动过滤死掉的服务</li>
+            <li>根据熔断(circuit breaker pattern)过滤服务</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>ILoadBalancer:定义负载均衡的操作接口</h2>
+        <ul>
+            <li>public void addServers(ListServer newServers);</li>
+            <li>public Server chooseServer(Object key);</li>
+            <li>public void markServerDown(Server server);</li>
+            <li>public ListServer getServerList(boolean availableOnly);</li>
+            <li>public ListServer getReachableServers();</li>
+            <li>public ListServer getAllServers();</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>IRule:负载均衡规则</h2>
+        <ul>
+            <li>public Server choose(Object key);</li>
+            <li>public void setLoadBalancer(ILoadBalancer lb);</li>
+            <li>public ILoadBalancer getLoadBalancer();</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>IPing:怎么样通过ping来检测服务的存活</h2>
+        <ul>
+            <li>public boolean isAlive(Server server)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>IPing:怎么样通过ping来检测服务的存活</h2>
+        <ul>
+            <li>public boolean isAlive(Server server)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>ServerListChangeListener:监听服务变更</h2>
+        <ul>
+            <li>public void serverListChanged(ListServer oldList, ListServer newList);</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>ServerListUpdater:服务列表动态更新</h2>
+        <ul>
+            <li>void serverListChanged(ListServer oldList, ListServer newList);</li>
+            <li>void start(UpdateAction updateAction);</li>
+            <li>void stop();</li>
+            <li>String getLastUpdate();</li>
+            <li>long getDurationSinceLastUpdateMs();</li>
+            <li>int getNumberMissedCycles();</li>
+            <li>int getCoreThreads();</li>
+        </ul>
+    </section>
+
 </section>
 
 <section>
     <section>
-        <h2>Router and Filter: Zuul</h2>
+        <h2>GateWay: Zuul</h2>
         微服务组网关
     </section>
     <section>
-        具体细节待补充
+        <img src="ppts/springCloudMS/zuul.png">
+    </section>
+    <section>
+        <h2>开发Filters实现业务功能</h2>
+        <ul>
+            <li>Incoming</li>
+            For example: authentication, dynamic routing, rate limiting, DDoS protection, metrics.
+            <li>Endpoint</li>
+            For example: health check responses, static error responses, 404 responses.
+            <li>Outgoing</li>
+            storing statistics, adding/stripping standard headers, sending events to real-time streams, gziping
+            responses.
+        </ul>
     </section>
 </section>
 
